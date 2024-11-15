@@ -36,7 +36,7 @@ int main()
             i--;
         }
     }
-
+    // cout << "Size: " << size << endl;
     for (int i = 0; i < size; i++)
     {
         cout << Arr[i] << " ";

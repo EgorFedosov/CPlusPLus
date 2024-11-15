@@ -7,34 +7,34 @@ int main()
     cout << "Enter size: ";
     cin >> size;
 
-
     int *Arr = new int[size];
     for (int i = 0; i < size; i++)
     {
         cout << "Enter element " << i + 1 << ": ";
         cin >> Arr[i];
     }
- 
-    int MaxNewSize = size * 2; 
-    int *NewArr = new int[MaxNewSize];
-    int NewSize = 0; 
 
-    
+    int MaxNewSize = size * 2;
+    int *NewArr = new int[MaxNewSize];
+
+    int NewSize;
     for (int i = 0; i < size; i++)
     {
-        if (Arr[i] % 2 != 0)
-        { 
-            if (Arr[i] < 0)
-            {
-                NewArr[NewSize] = 10;
+        if (Arr[i] % 2 != 0){
+            NewSize++;
+            if(Arr[i] % 2 !=0 && Arr[i]<0){
                 NewSize++;
             }
-            NewArr[NewSize] = Arr[i];
-            NewSize++;
         }
     }
 
-    cout << "New array: ";
+    for (int i = 0; i < size; i++){
+        if (Arr[i] % 2 = 0){
+            Arr[i] = NewArr[i];
+        }
+    }
+
+        cout << "New array: ";
     for (int i = 0; i < NewSize; i++)
     {
         cout << NewArr[i] << " ";
