@@ -38,7 +38,7 @@ int main()
     {
         for (int j = 0; j < n; ++j)
         {
-            if ((i <= j && i + j < n) || (i >= j && i + j >= n)) // нижний + верхний треугольник
+            if ((i <= j && i + j < n) || (i >= j && i + j >= n) || (i + j == n - 1))
             {
                 if (arr[i][j] > max)
                     max = arr[i][j];
@@ -46,15 +46,6 @@ int main()
                     min = arr[i][j];
             }
         }
-    }
-    // ubrat mojno
-    if (n % 2 == 1) // если нечет
-    {
-        int center = arr[n / 2][n / 2];
-        if (center > max)
-            max = center;
-        if (center < min)
-            min = center;
     }
 
     cout << "Максимум: " << max << ", Минимум: " << min << endl;
