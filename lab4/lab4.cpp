@@ -9,7 +9,7 @@ int main()
     cout << endl
          << endl;
 
-        int *Arr = new int[size];
+    int *Arr = new int[size];
 
     for (int i = 0; i < size; i++)
     {

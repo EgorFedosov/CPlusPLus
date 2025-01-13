@@ -35,16 +35,10 @@ int main()
         if (stroka[i] == ' ' && inWord)
         {
             inWord = false;
-            // if (numWord == 1 || numWord == 3 || numWord == 5)
-            // {
-            //     rez[a] = ' ';
-            //     a++;
-            // }
         }
     }
-    =
 
-        if (inWord && (numWord == 1 || numWord == 3 || numWord == 5))
+    if (inWord && (numWord == 1 || numWord == 3 || numWord == 5)) // aaa
     {
         rez[a] = ' ';
         a++;
