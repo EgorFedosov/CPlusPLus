@@ -63,7 +63,7 @@ void Del_All(spis **p)
     tail = nullptr;
 }
 
-void change(spis **p)
+void SwapMinToHead(spis **p)
 {
 
     spis *min = *p;
@@ -102,6 +102,85 @@ void change(spis **p)
     }
 }
 
+void SwapMinMax(spis **p)
+{
+    if (!p || !(*p) || !(*p)->next)
+        return; // Если пусто или 1 элемент
+
+    spis *t = *p;
+    spis *min = *p;
+    spis *max = *p;
+
+    // Поиск min и max
+    while (t)
+    {
+        if (t->info < min->info)
+            min = t;
+        if (t->info > max->info)
+            max = t;
+        t = t->next;
+    }
+
+    if (min == max)
+        return;
+
+    spis *MinNext = min->next;
+    spis *MinPrev = min->prev;
+    spis *MaxNext = max->next;
+    spis *MaxPrev = max->prev;
+
+    // если min и max соседи
+    if (max->next == min)
+    { // max перед min
+        if (MaxPrev)
+            MaxPrev->next = min;
+        if (MinNext)
+            MinNext->prev = max;
+
+        min->prev = MaxPrev;
+        min->next = max;
+        max->prev = min;
+        max->next = MinNext;
+    }
+    else if (min->next == max)
+    { // min перед max
+        if (MinPrev)
+            MinPrev->next = max;
+        if (MaxNext)
+            MaxNext->prev = min;
+
+        max->prev = MinPrev;
+        max->next = min;
+        min->prev = max;
+        min->next = MaxNext;
+    }
+    else
+    { // ОБЩИЙ СЛУЧАЙ
+      // связываем соседей Мин и Макса
+        if (MinPrev)
+            MinPrev->next = max;
+        if (MinNext)
+            MinNext->prev = max;
+        if (MaxPrev)
+            MaxPrev->next = min;
+        if (MaxNext)
+            MaxNext->prev = min;
+
+        min->next = MaxNext;
+        min->prev = MaxPrev;
+        max->next = MinNext;
+        max->prev = MinPrev;
+    }
+
+    //  если min или max были head-e
+
+    //===========OK
+    if (*p == min)
+        *p = max;
+    else if (*p == max)
+        *p = min;
+}
+
 void removed(spis **p)
 {
     spis *current = *p;
@@ -137,7 +216,7 @@ int main()
     int i, in, n, num, num1;
     while (true)
     {
-        cout << "\n\tcreate - 1\n\tadd - 2\n\tview - 3\n\tdelete spis - 4\n\tchange - 5\n\texit - 0 : ";
+        cout << "\n\tcreate - 1\n\tadd - 2\n\tview - 3\n\tdelete spis - 4\n\tSwapMinToHead - 5\n\tSwapMinMax - 6 \n\texit - 0 : ";
         cin >> num;
         switch (num)
         {
@@ -211,9 +290,21 @@ int main()
                 cout << "list pust!" << endl;
                 break;
             }
-            change(&head);
+            SwapMinToHead(&head);
             cout << "done" << endl;
             break;
+
+        case 6:
+        {
+            if (!head)
+            {
+                cout << "list pust!" << endl;
+                break;
+            }
+            SwapMinMax(&head);
+            cout << "done" << endl;
+            break;
+        }
         case 0:
             if (head != nullptr)
                 Del_All(&head);
