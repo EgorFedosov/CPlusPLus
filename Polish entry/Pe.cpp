@@ -188,9 +188,11 @@ int main()
     char polRecord[maxSize];
     cout << "Введите выражение: ";
     cin >> mathRecord;
+
     ConvertToPolish(mathRecord, polRecord);
     cout << "Обратная польская запись: " << polRecord << endl;
     double values[26] = {0};
+
     for (int i = 0; mathRecord[i] != '\0'; i++)
     {
         char ch = mathRecord[i];
@@ -200,6 +202,7 @@ int main()
             cin >> values[ch - 'a'];
         }
     }
+
     double result = calcRes(polRecord, values);
     cout << "Результат: " << result << endl;
     return 0;
