@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <windows.h>
 
 using namespace std;
 
@@ -685,6 +686,44 @@ void generateRandomClients()
     cout << "Сгенерировано " << count << " клиентов\n";
 }
 
+size_t my_strlen(const char *str)
+{
+    size_t length = 0;
+    while (str[length] != '\0')
+    {
+        ++length;
+    }
+    return length;
+}
+
+bool my_isalpha(char ch)
+{
+    if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z') ||
+        (ch >= 'А' && ch <= 'Я') || (ch >= 'а' && ch <= 'я'))
+    {
+        return true;
+    }
+    return false;
+}
+
+int my_strncmp(const char *str1, const char *str2, size_t n)
+{
+    for (size_t i = 0; i < n; ++i)
+    {
+        if (str1[i] == '\0' || str2[i] == '\0' || str1[i] != str2[i])
+        {
+            return static_cast<int>(static_cast<unsigned char>(str1[i]) -
+                                    static_cast<unsigned char>(str2[i]));
+        }
+    }
+    return 0;
+}
+
+bool my_isdigit(char ch)
+{
+    return (ch >= '0' && ch <= '9');
+}
+
 int main()
 {
     setlocale(LC_ALL, "Russian");
@@ -703,26 +742,147 @@ int main()
              << "0. Выход\n"
              << "Выберите действие: ";
         cin >> choice;
+        cin.ignore();
 
         switch (choice)
         {
         case 1:
         {
             Client newClient;
-            cout << "Введите ФИО: ";
-            cin.getline(newClient.name, 100);
-            cout << "Введите телефон: ";
-            cin.getline(newClient.phone, 20);
-            cout << "Введите товар: ";
-            cin.getline(newClient.product, 100);
-            cout << "Введите дату (дд мм гггг): ";
-            cin >> newClient.day >> newClient.month >> newClient.year;
-            cin.ignore();
-            cout << "Введите количество: ";
-            cin >> newClient.quantity;
-            cout << "Введите сумму: ";
-            cin >> newClient.amount;
-            cin.ignore();
+
+            while (true)
+            {
+                cout << "Введите ФИО (не более 99 символов, только буквы и пробелы): ";
+                cin.getline(newClient.name, 100);
+
+                if (my_strlen(newClient.name) == 0)
+                {
+                    cout << "Ошибка: ФИО не может быть пустым.\n";
+                    continue;
+                }
+
+                bool isValid = true;
+                for (int i = 0; i < my_strlen(newClient.name); ++i)
+                {
+                    if (!my_isalpha(newClient.name[i]) && newClient.name[i] != ' ')
+                    {
+                        isValid = false;
+                        break;
+                    }
+                }
+
+                if (!isValid)
+                {
+                    cout << "Ошибка: ФИО должно содержать только буквы и пробелы.\n";
+                    continue;
+                }
+
+                break;
+            }
+
+            while (true)
+            {
+                cout << "Введите телефон: ";
+                cin.getline(newClient.phone, 20);
+
+                if (my_strlen(newClient.phone) == 0)
+                {
+                    cout << "Ошибка: Телефон не может быть пустым.\n";
+                    continue;
+                }
+
+                for (int i = 0; newClient.phone[i] != '\0'; i++)
+                {
+                    if (!my_isdigit(newClient.phone[i]) && newClient.phone[i] != '+')
+                    {
+                        cout << "Ошибка: Некорректные данные номера телефона.\n";
+                        break;
+                    }
+                    continue;
+                }
+                break;
+            }
+
+            while (true)
+            {
+                cout << "Введите товар (не более 99 символов, только буквы, пробелы и числа): ";
+                cin.getline(newClient.product, 100);
+
+                if (my_strlen(newClient.product) == 0)
+                {
+                    cout << "Ошибка: Наименование товара не может быть пустым.\n";
+                    continue;
+                }
+
+                bool isValid = true;
+                for (int i = 0; i < my_strlen(newClient.product); ++i)
+                {
+                    if (!my_isalpha(newClient.product[i]) && newClient.product[i] != ' ' && !my_isdigit(newClient.product[i]))
+                    {
+                        isValid = false;
+                        break;
+                    }
+                }
+
+                if (!isValid)
+                {
+                    cout << "Ошибка: Наименование товара должно содержать только буквы, пробелы и числа .\n";
+                    continue;
+                }
+
+                break;
+            }
+
+            while (true)
+            {
+                cout << "Введите дату (дд мм гггг): ";
+                cin >> newClient.day >> newClient.month >> newClient.year;
+                cin.ignore();
+
+                if (newClient.day < 1 || newClient.day > 31 ||
+                    newClient.month < 1 || newClient.month > 12)
+                {
+                    cout << "Ошибка: Некорректная дата. День: 1-31, Месяц: 1-12.\n";
+                    continue;
+                }
+
+                if (!my_isdigit(newClient.day) || !my_isdigit(newClient.month) || !my_isdigit(newClient.year))
+                {
+                    cout << "Ошибка: Некорректная дата.\n";
+                    continue;
+                }
+                    break;
+            }
+
+            while (true)
+            {
+                cout << "Введите количество (1-100): ";
+                cin >> newClient.quantity;
+                cin.ignore();
+
+                if (newClient.quantity <= 0)
+                {
+                    cout << "Ошибка: Количество должно быть больше нуля.\n";
+                    continue;
+                }
+
+                break;
+            }
+
+            while (true)
+            {
+                cout << "Введите сумму: ";
+                cin >> newClient.amount;
+                cin.ignore();
+
+                if (newClient.amount <= 0)
+                {
+                    cout << "Ошибка: Сумма должна быть больше нуля.\n";
+                    continue;
+                }
+
+                break;
+            }
 
             saveToBinaryFile(newClient);
 
