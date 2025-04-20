@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <windows.h>
-
+// Русский, бинарная сортировка отсотировать перед началом, проверки на ввод(дату ввести по разными способами), высокосный год
 using namespace std;
 
 struct Client
@@ -628,10 +628,10 @@ void generateReport()
 void generateRandomClients()
 {
     srand(time(0));
-    const string names[] = {"Андрей", "Александр", "Татьяна", "Светлана", "Дмитрий", "Елена"};
-    const string surnames[] = {"Иванов", "Петров", "Сидоров", "Ковалёва", "Волков"};
-    const string patronymics[] = {"Александрович", "Викторович", "Николаевич", "Петрович"};
-    const string products[] = {"Смартфон", "Холодильник", "Пылесос", "Чайник", "Микроволновка"};
+    const string names[] = {"Anrey", "Sasha", "Tanus", "Simple", "Dima", "Vova"};
+    const string surnames[] = {"Good", "Peep", "Jak", "Nau", "Volkov"};
+    const string patronymics[] = {"Cas", "das", "Veel", "Sam"};
+    const string products[] = {"iphone", "ipad", "bmw m3", "audi rs 5", "benz"};
     const string operators[] = {"25", "29", "33", "44"};
 
     int count;
@@ -730,7 +730,9 @@ int main()
     int choice;
     do
     {
-        cout << "=== ГЛАВНОЕ МЕНЮ ===\n"
+        cout << endl
+             << endl
+             << "=== ГЛАВНОЕ МЕНЮ ===\n"
              << "1. Добавить клиента\n"
              << "2. Просмотреть записи\n"
              << "3. Редактировать клиента\n"
@@ -790,22 +792,23 @@ int main()
                     cout << "Ошибка: Телефон не может быть пустым.\n";
                     continue;
                 }
-
+                bool isCorrect = true;
                 for (int i = 0; newClient.phone[i] != '\0'; i++)
                 {
                     if (!my_isdigit(newClient.phone[i]) && newClient.phone[i] != '+')
                     {
+                        isCorrect = false;
                         cout << "Ошибка: Некорректные данные номера телефона.\n";
                         break;
                     }
-                    continue;
                 }
-                break;
+                if (isCorrect)
+                    break;
             }
 
             while (true)
             {
-                cout << "Введите товар (не более 99 символов, только буквы, пробелы и числа): ";
+                cout << "Введите наименование товара: ";
                 cin.getline(newClient.product, 100);
 
                 if (my_strlen(newClient.product) == 0)
@@ -846,17 +849,17 @@ int main()
                     continue;
                 }
 
-                if (!my_isdigit(newClient.day) || !my_isdigit(newClient.month) || !my_isdigit(newClient.year))
-                {
-                    cout << "Ошибка: Некорректная дата.\n";
-                    continue;
-                }
-                    break;
+                // if (!my_isdigit(newClient.day) || !my_isdigit(newClient.month) || !my_isdigit(newClient.year))
+                // {
+                //     cout << "Ошибка: Некорректная дата.\n";
+                //     continue;
+                // }
+                break;
             }
 
             while (true)
             {
-                cout << "Введите количество (1-100): ";
+                cout << "Введите количество: ";
                 cin >> newClient.quantity;
                 cin.ignore();
 
