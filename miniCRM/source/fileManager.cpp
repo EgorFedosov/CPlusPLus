@@ -19,24 +19,29 @@ void saveToBinaryFile(const Client &client)
 
 void displayBinaryFile()
 {
-    ifstream file("clients.bin", ios::binary);  
-    checkFileOpen();
-    checkFileEmpty();
-
-    Client client;
-    while (file.read(reinterpret_cast<char *>(&client), sizeof(Client))) 
+    if (checkFileEmpty() && checkFileOpen())
     {
-        printClient(client);
-    }
+        ifstream file("clients.bin", ios::binary);
 
-    file.close();
+        Client client;
+        while (file.read(reinterpret_cast<char *>(&client), sizeof(Client)))
+        {
+            printClient(client);
+        }
+
+        file.close();
+    }
+    else
+        return;
 }
 
-void removeBinaryFile(){
+void removeBinaryFile()
+{
+    if (checkFileEmpty() && checkFileOpen())
+    {
 
-    checkFileOpen();
-    checkFileEmpty();
-
-    if (remove("clients.bin") == 0)
-        cout << "Файл clients.bin успешно удален\n";
+        if (remove("clients.bin") == 0)
+            cout << "Файл clients.bin успешно удален\n";
+    }else
+        return;
 }

@@ -20,7 +20,7 @@ int main()
 
         cout << "\nМеню:\n";
         cout << "1. Добавить клиента\n";
-        cout << "2. Просмотреть записи\n"; 
+        cout << "2. Просмотреть записи\n";
         cout << "3. Редактировать клиента\n";
         cout << "4. Удалить клиента\n";
         cout << "5. Сортировать клиентов по наименованию товара(быстрая)\n";
@@ -29,11 +29,11 @@ int main()
         cout << "8. Поиск по ФИО(линейный)\n";
         cout << "9. Поиск по товару (линейный)\n";
         cout << "10.Поиск по товару (бинарный)\n";
-        cout << "11.Поиск по товару и дате(покупка товара после введенной даты)\n"; 
-
+        cout << "11.Поиск по товару и дате(покупка товара после введенной даты)\n";
         cout << "12.Создать отчет\n";
         cout << "13. Сгенерировать случайных клиентов\n";
-        cout << "14. Удалить всех клиентов\n";
+        cout << "14. Узнать количество клиентов\n";
+        cout << "15. Удалить всех клиентов\n";
         cout << "0. Выход\n";
         cout << "Выберите действие: ";
 
@@ -54,22 +54,20 @@ int main()
             deleteClient();
             break;
         case 5:
-            sortClientsByProduct(); 
+            sortClientsByProduct();
             break;
         case 6:
-            sortClientsByData(); 
+            sortClientsByData();
             break;
         case 7:
-            sortClientsByName(); 
+            sortClientsByName();
             break;
         case 8:
             searchLinearByName();
             break;
         case 9:
-        {
             searchLinearByProduct();
             break;
-        }
         case 10:
             searchBinaryByName();
             break;
@@ -84,6 +82,9 @@ int main()
             generateRandomClient();
             break;
         case 14:
+            getCountClient();
+            break;
+        case 15:
             removeBinaryFile();
             break;
         case 0:

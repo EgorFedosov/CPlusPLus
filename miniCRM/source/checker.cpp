@@ -6,17 +6,18 @@
 
 using namespace std;
 
-void checkFileOpen()
+bool checkFileOpen()
 {
     ifstream file("clients.bin", ios::binary);
     if (!file)
     {
         cout << "Ошибка доступа к файлу, возможно, он не существует\n";
-        return;
-    }
+        return false;
+    }else
+        return true;
 }
 
-void checkFileEmpty()
+bool checkFileEmpty()
 {
     ifstream file("clients.bin", ios::binary);
     file.seekg(0, ios::end);
@@ -24,8 +25,9 @@ void checkFileEmpty()
     if (count == 0)
     {
         cout << "Файл пуст\n";
-        return;
-    }
+        return false;
+    } else
+        return true;
 }
 
 short checkChoice()
@@ -42,7 +44,7 @@ short checkChoice()
         valid = true;
         if (my_strlen(input) == 0)
         {
-            cout << "Ошибка: введите число от 0 до 14." << endl;
+            cout << "Ошибка: введите число от 0 до 15." << endl;
             valid = false;
             continue;
         }
@@ -51,12 +53,12 @@ short checkChoice()
 
         if (end == input || *end != '\0')
         {
-            cout << "Ошибка: введите  число от 0 до 14." << endl;
+            cout << "Ошибка: введите  число от 0 до 15." << endl;
             valid = false;
         }
         else if (choice < 0 || choice > 14)
         {
-            cout << "Ошибка: введите  число от 0 до 14." << endl;
+            cout << "Ошибка: введите  число от 0 до 15." << endl;
             valid = false;
         }
 

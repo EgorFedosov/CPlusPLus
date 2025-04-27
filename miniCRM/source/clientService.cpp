@@ -75,193 +75,224 @@ void setDate(Client &client)
 
 void editClient()
 {
-    fstream file("clients.bin", ios::in | ios::out | ios::binary);
-    checkFileOpen();
-    checkFileEmpty();
-
-    char searchName[100];
-    cout << "Введите ФИО клиента для редактирования: ";
-    cin.getline(searchName, 100);
-
-    Client client;
-    streampos pos;
-    bool found = false;
-
-    while (file.read(reinterpret_cast<char *>(&client), sizeof(Client)))
+    if (checkFileEmpty() && checkFileOpen())
     {
-        if (my_strcmp(client.name, searchName) == 0)
+
+        fstream file("clients.bin", ios::in | ios::out | ios::binary);
+        char searchName[100];
+        cout << "Введите ФИО клиента для редактирования: ";
+        cin.getline(searchName, 100);
+
+        Client client;
+        streampos pos;
+        bool found = false;
+
+        while (file.read(reinterpret_cast<char *>(&client), sizeof(Client)))
         {
-            pos = file.tellg() - static_cast<streampos>(sizeof(Client)); // получаем позицию (конец прочтения - размер объекта)
-            found = true;
-            break;
+            if (my_strcmp(client.name, searchName) == 0)
+            {
+                pos = file.tellg() - static_cast<streampos>(sizeof(Client)); // получаем позицию (конец прочтения - размер объекта)
+                found = true;
+                break;
+            }
         }
-    }
 
-    if (!found)
-    {
-        cout << "Клиент не найден\n";
+        if (!found)
+        {
+            cout << "Клиент не найден\n";
+            file.close();
+            return;
+        }
+
+        int editChoice;
+        cout << "Выберите поле для редактирования:\n"
+             << "1. Телефон\n"
+             << "2. Товар\n"
+             << "3. Дата\n"
+             << "4. Количество\n"
+             << "5. Сумма\n"
+             << "Ваш выбор: ";
+        cin >> editChoice;
+        cin.ignore();
+
+        switch (editChoice)
+        {
+        case 1:
+            cout << "Новый телефон: ";
+            checkPhoneNum(client.phone, 20);
+            break;
+        case 2:
+            cout << "Новый товар: ";
+            cin.getline(client.product, 100);
+            break;
+        case 3:
+            cout << "Дата (используйте . / -): ";
+            setDate(client);
+            break;
+        case 4:
+            cout << "Количество: ";
+            client.quantity = checkPositiveNum<int>();
+            break;
+        case 5:
+            cout << "Сумма: ";
+            client.amount = checkPositiveNum<double>();
+            break;
+        default:
+            cout << "Неверный выбор\n";
+            file.close();
+            return;
+        }
+
+        file.seekp(pos);                                                     // перемещаемся в начало client
+        file.write(reinterpret_cast<const char *>(&client), sizeof(Client)); // перещаписываем весь объект, с учетом изменённого поля
         file.close();
-        return;
+        cout << "Данные успешно обновлены!\n";
     }
-
-    int editChoice;
-    cout << "Выберите поле для редактирования:\n"
-         << "1. Телефон\n"
-         << "2. Товар\n"
-         << "3. Дата\n"
-         << "4. Количество\n"
-         << "5. Сумма\n"
-         << "Ваш выбор: ";
-    cin >> editChoice;
-    cin.ignore();
-
-    switch (editChoice)
-    {
-    case 1:
-        cout << "Новый телефон: ";
-        checkPhoneNum(client.phone, 20);
-        break;
-    case 2:
-        cout << "Новый товар: ";
-        cin.getline(client.product, 100);
-        break;
-    case 3:
-        cout << "Дата (используйте . / -): ";
-        setDate(client);
-        break;
-    case 4:
-        cout << "Количество: ";
-        client.quantity = checkPositiveNum<int>();
-        break;
-    case 5:
-        cout << "Сумма: ";
-        client.amount = checkPositiveNum<double>();
-        break;
-    default:
-        cout << "Неверный выбор\n";
-        file.close();
+    else
         return;
-    }
-
-    file.seekp(pos);                                                     // перемещаемся в начало client
-    file.write(reinterpret_cast<const char *>(&client), sizeof(Client)); // перещаписываем весь объект, с учетом изменённого поля
-    file.close();
-    cout << "Данные успешно обновлены!\n";
 }
 
 void deleteClient()
 {
-    checkFileEmpty();
-    checkFileOpen();
-
-    char deleteName[100];
-    cout << "Введите ФИО клиента для удаления: ";
-    cin.getline(deleteName, 100);
-
-    ifstream inFile("clients.bin", ios::binary); // Исходный файл (для чтения)
-    ofstream outFile("temp.bin", ios::binary);   // Временный файл (для записи)
-
-    if (!inFile || !outFile)
+    if (checkFileEmpty() && checkFileOpen())
     {
-        cout << "Ошибка при удалении\n";
-        return;
-    }
+        char deleteName[100];
+        cout << "Введите ФИО клиента для удаления: ";
+        cin.getline(deleteName, 100);
 
-    Client client;
-    bool found = false;
+        ifstream inFile("clients.bin", ios::binary); // Исходный файл (для чтения)
+        ofstream outFile("temp.bin", ios::binary);   // Временный файл (для записи)
 
-    while (inFile.read(reinterpret_cast<char *>(&client), sizeof(Client)))
-    {
-        if (my_strcmp(client.name, deleteName) != 0)
+        if (!inFile || !outFile)
         {
-            outFile.write(reinterpret_cast<const char *>(&client), sizeof(Client));
+            cout << "Ошибка при удалении\n";
+            return;
+        }
+
+        Client client;
+        bool found = false;
+
+        while (inFile.read(reinterpret_cast<char *>(&client), sizeof(Client)))
+        {
+            if (my_strcmp(client.name, deleteName) != 0)
+            {
+                outFile.write(reinterpret_cast<const char *>(&client), sizeof(Client));
+            }
+            else
+            {
+                found = true;
+            }
+        }
+
+        inFile.close();
+        outFile.close();
+
+        if (found)
+        {
+            remove("clients.bin");             // Удаляем исходный файл
+            rename("temp.bin", "clients.bin"); // Переименовываем временный файл
+            cout << "Запись успешно удалена\n";
         }
         else
         {
-            found = true;
+            remove("temp.bin"); // Удаляем временный файл, если клиент не найден
+            cout << "Клиент не найден\n";
         }
     }
-
-    inFile.close();
-    outFile.close();
-
-    if (found)
-    {
-        remove("clients.bin");             // Удаляем исходный файл
-        rename("temp.bin", "clients.bin"); // Переименовываем временный файл
-        cout << "Запись успешно удалена\n";
-    }
     else
-    {
-        remove("temp.bin"); // Удаляем временный файл, если клиент не найден
-        cout << "Клиент не найден\n";
-    }
+        return;
 }
 
 void sortClientsByProduct()
 {
-    checkFileOpen();
-    checkFileEmpty();
+    if (checkFileEmpty() && checkFileOpen())
+    {
 
-    fstream file("clients.bin", ios::in | ios::out | ios::binary);
-    file.seekg(0, ios::end);
-    int count = file.tellg() / sizeof(Client);
+        fstream file("clients.bin", ios::in | ios::out | ios::binary);
+        file.seekg(0, ios::end);
+        int count = file.tellg() / sizeof(Client);
 
-    Client *clients = new Client[count];
-    file.seekg(0);
-    file.read(reinterpret_cast<char *>(clients), count * sizeof(Client));
-    file.close();
+        Client *clients = new Client[count];
+        file.seekg(0);
+        file.read(reinterpret_cast<char *>(clients), count * sizeof(Client));
+        file.close();
 
-    sortQuickProduct(clients, 0, count - 1);
+        sortQuickProduct(clients, 0, count - 1);
 
-    file.open("clients.bin", ios::out | ios::binary | ios::trunc); // открываем для записи, если что-то есть - то удаляем
-    file.write(reinterpret_cast<const char *>(clients), count * sizeof(Client));
-    file.close();
+        file.open("clients.bin", ios::out | ios::binary | ios::trunc); // открываем для записи, если что-то есть - то удаляем
+        file.write(reinterpret_cast<const char *>(clients), count * sizeof(Client));
+        file.close();
 
-    delete[] clients;
-    cout << "Сортировка выполнена успешно\n";
+        delete[] clients;
+        cout << "Сортировка выполнена успешно\n";
+    }
+    else
+        return;
 }
 
 void sortClientsByData()
 {
-    fstream file("clients.bin", ios::in | ios::out | ios::binary);
-    file.seekg(0, ios::end);
-    int count = file.tellg() / sizeof(Client);
+    if (checkFileEmpty() && checkFileOpen())
+    {
 
-    Client *clients = new Client[count];
-    file.seekg(0);
-    file.read(reinterpret_cast<char *>(clients), count * sizeof(Client));
-    file.close();
+        fstream file("clients.bin", ios::in | ios::out | ios::binary);
+        file.seekg(0, ios::end);
+        int count = file.tellg() / sizeof(Client);
 
-    sortSelection(clients, count);
+        Client *clients = new Client[count];
+        file.seekg(0);
+        file.read(reinterpret_cast<char *>(clients), count * sizeof(Client));
+        file.close();
 
-    file.open("clients.bin", ios::out | ios::binary | ios::trunc); // открываем для записи, если что-то есть - то удаляем
-    file.write(reinterpret_cast<const char *>(clients), count * sizeof(Client));
-    file.close();
+        sortSelection(clients, count);
 
-    delete[] clients;
-    cout << "Сортировка выполнена успешно\n";
+        file.open("clients.bin", ios::out | ios::binary | ios::trunc); // открываем для записи, если что-то есть - то удаляем
+        file.write(reinterpret_cast<const char *>(clients), count * sizeof(Client));
+        file.close();
+
+        delete[] clients;
+        cout << "Сортировка выполнена успешно\n";
+    }
+    else
+        return;
 }
 
 void sortClientsByName()
 {
-    fstream file("clients.bin", ios::in | ios::out | ios::binary);
-    file.seekg(0, ios::end);
-    int count = file.tellg() / sizeof(Client);
+    if (checkFileEmpty() && checkFileOpen())
+    {
+        fstream file("clients.bin", ios::in | ios::out | ios::binary);
+        file.seekg(0, ios::end);
+        int count = file.tellg() / sizeof(Client);
 
-    Client *clients = new Client[count];
-    file.seekg(0);
-    file.read(reinterpret_cast<char *>(clients), count * sizeof(Client));
-    file.close();
+        Client *clients = new Client[count];
+        file.seekg(0);
+        file.read(reinterpret_cast<char *>(clients), count * sizeof(Client));
+        file.close();
 
-    sortInsertion(clients, count);
+        sortInsertion(clients, count);
 
-    file.open("clients.bin", ios::out | ios::binary | ios::trunc); // открываем для записи, если что-то есть - то удаляем
-    file.write(reinterpret_cast<const char *>(clients), count * sizeof(Client));
-    file.close();
+        file.open("clients.bin", ios::out | ios::binary | ios::trunc); // открываем для записи, если что-то есть - то удаляем
+        file.write(reinterpret_cast<const char *>(clients), count * sizeof(Client));
+        file.close();
 
-    delete[] clients;
-    cout << "Сортировка выполнена успешно\n";
+        delete[] clients;
+        cout << "Сортировка выполнена успешно\n";
+    }
+    else
+        return;
+}
+
+void getCountClient(){
+    if (checkFileEmpty() && checkFileOpen())
+    {
+        fstream file("clients.bin", ios::in | ios::out | ios::binary);
+        file.seekg(0, ios::end);
+        int count = file.tellg() / sizeof(Client);
+
+        cout << "Всего клиентов: " << count << endl;
+    } else
+        return;
 }
 
 void generateRandomClient()
