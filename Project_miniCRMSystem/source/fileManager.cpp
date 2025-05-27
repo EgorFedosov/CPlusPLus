@@ -35,13 +35,15 @@ void displayBinaryFile()
         return;
 }
 
-void removeBinaryFile()
+void removeClients()
 {
-    if (checkFileEmpty() && checkFileOpen())
+    if (checkFileOpen() && checkFileEmpty())
     {
-
-        if (remove("clients.bin") == 0)
-            cout << "Файл clients.bin успешно удален\n";
-    }else
-        return;
+        ofstream file("clients.bin", ios::binary | ios::trunc); // очищаем содержимое файла
+        if (file)
+        {
+            cout << "Все записи клиентов были удалены.\n";
+            file.close();
+        }
+    }
 }

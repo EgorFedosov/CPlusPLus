@@ -146,7 +146,7 @@ void editClient()
         file.seekp(pos);                                                     // перемещаемся в начало client
         file.write(reinterpret_cast<const char *>(&client), sizeof(Client)); // перещаписываем весь объект, с учетом изменённого поля
         file.close();
-        cout << "Данные успешно обновлены!\n";
+        cout << "Данные успешно обновлены10\n";
     }
     else
         return;
@@ -284,7 +284,7 @@ void sortClientsByName()
 }
 
 void getCountClient(){
-    if (checkFileEmpty() && checkFileOpen())
+    if (checkFileOpen())
     {
         fstream file("clients.bin", ios::in | ios::out | ios::binary);
         file.seekg(0, ios::end);

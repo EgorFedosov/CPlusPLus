@@ -24,12 +24,12 @@ void saveToBinaryFile(const Client &client);
 void displayBinaryFile();
 
 /**
- * @brief Удаляет бинарный файл клиентов.
+ * @brief Очищает бинарный файл клиентов.
  *
- * Безвозвратно удаляет файл clients.bin после проверки:
- * - Существования файла
- * - Наличия данных в файле
+ * Безвозвратно очищает содержимое файла clients.bin после проверки:
+ * - Файл открыт успешно
+ * - Файл не пуст
  */
-void removeBinaryFile();
+void removeClients();
 
-#endif 
+#endif

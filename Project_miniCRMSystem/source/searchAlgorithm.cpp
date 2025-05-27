@@ -73,7 +73,9 @@ void searchBinaryByName()
     {
 
         ifstream file("clients.bin", ios::binary);
+        file.seekg(0, ios::end);
         int count = file.tellg() / sizeof(Client);
+        file.seekg(0); 
         Client *clients = new Client[count];
 
         file.seekg(0);

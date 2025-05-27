@@ -56,7 +56,7 @@ short checkChoice()
             cout << "Ошибка: введите  число от 0 до 15." << endl;
             valid = false;
         }
-        else if (choice < 0 || choice > 14)
+        else if (choice < 0 || choice > 15)
         {
             cout << "Ошибка: введите  число от 0 до 15." << endl;
             valid = false;

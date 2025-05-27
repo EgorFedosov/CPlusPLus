@@ -1,4 +1,4 @@
-#include "charUtils.h"  
+#include "charUtils.h"
 using namespace std;
 
 int my_strcmp(const char *str1, const char *str2)
@@ -6,7 +6,7 @@ int my_strcmp(const char *str1, const char *str2)
 
     while (*str1 != '\0' && (*str1 == *str2))
     {
-        str1++; 
+        str1++;
         str2++;
     }
 
@@ -57,9 +57,9 @@ bool my_isalpha(char ch)
         return true;
     }
     // Русские буквы в кодировке Windows-1251
-    if ((ch >= '\xC0' && ch <= '\xDF') || 
+    if ((ch >= '\xC0' && ch <= '\xDF') ||
         (ch >= '\xE0' && ch <= '\xFF'))
-    { 
+    {
         return true;
     }
     return false;
@@ -100,26 +100,21 @@ char *my_strncat(char *dest, const char *src, size_t n)
     return dest;
 }
 
-#include <iostream>
-#include <cstring>
-#include <cctype>
-
 bool parseDate(const char *data, int *day, int *month, int *year)
 {
-    
     if (data == nullptr || data[0] == '\0')
     {
         return false;
     }
 
-    int values[3] = {0}; 
-    int valueIndex = 0;  
-    int pos = 0;        
+    int values[3] = {0};
+    int valueIndex = 0;
+    int pos = 0;
     int length = my_strlen(data);
 
     while (pos < length && valueIndex < 3)
     {
-        while (pos < length && data[pos] == ' ')
+        while (pos < length && (data[pos] == ' ' || data[pos] == '.' || data[pos] == '/' || data[pos] == '-'))
         {
             pos++;
         }
@@ -129,7 +124,6 @@ bool parseDate(const char *data, int *day, int *month, int *year)
             break;
         }
 
-  
         int start = pos;
         int number = 0;
 
@@ -139,34 +133,30 @@ bool parseDate(const char *data, int *day, int *month, int *year)
             pos++;
         }
 
-      
         if (start == pos)
-        { 
+        {
             return false;
         }
 
         values[valueIndex++] = number;
 
-        if (pos < length && data[pos] != ' ')
+        if (pos < length && data[pos] != ' ' && data[pos] != '.' && data[pos] != '/' && data[pos] != '-')
         {
             return false;
         }
     }
 
-  
     if (valueIndex != 3 || pos != length)
     {
         return false;
     }
 
-
     if (values[0] < 1 || values[0] > 31 ||
         values[1] < 1 || values[1] > 12 ||
-        values[2] < 1)
+        values[2] < 1 || values[1] > 2025)
     {
         return false;
     }
-
 
     *day = values[0];
     *month = values[1];
@@ -174,4 +164,3 @@ bool parseDate(const char *data, int *day, int *month, int *year)
 
     return true;
 }
-
