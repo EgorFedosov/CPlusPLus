@@ -31,9 +31,9 @@ int main()
         cout << "10.Поиск по товару (бинарный)\n";
         cout << "11.Поиск по товару и дате(покупка товара после введенной даты)\n";
         cout << "12.Создать отчет\n";
-        cout << "13. Сгенерировать случайных клиентов\n";
-        cout << "14. Узнать количество клиентов\n";
-        cout << "15. Удалить всех клиентов\n";
+        cout << "13.Сгенерировать случайных клиентов\n";
+        cout << "14.Узнать количество клиентов\n";
+        cout << "15.Удалить всех клиентов\n";
         cout << "0. Выход\n";
         cout << "Выберите действие: ";
 
@@ -69,7 +69,7 @@ int main()
             searchLinearByProduct();
             break;
         case 10:
-            searchBinaryByName();
+            searchBinaryByProduct();
             break;
         case 11:
             searchByProductAndDate();
@@ -77,7 +77,6 @@ int main()
         case 12:
             generateReport();
             break;
-
         case 13:
             generateRandomClient();
             break;

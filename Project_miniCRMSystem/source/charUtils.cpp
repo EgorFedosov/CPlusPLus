@@ -135,7 +135,7 @@ bool parseDate(const char *data, int *day, int *month, int *year)
 
         if (start == pos)
         {
-            return false;
+            return false; // если не было ни одной цифры
         }
 
         values[valueIndex++] = number;
@@ -153,7 +153,7 @@ bool parseDate(const char *data, int *day, int *month, int *year)
 
     if (values[0] < 1 || values[0] > 31 ||
         values[1] < 1 || values[1] > 12 ||
-        values[2] < 1 || values[1] > 2025)
+        values[2] < 1 || values[2] > 2025)
     {
         return false;
     }

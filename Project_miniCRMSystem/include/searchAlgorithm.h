@@ -21,7 +21,7 @@ void searchLinearByName();
  *
  * @warning В текущей реализации сортирует данные по товару перед поиском
  */
-void searchBinaryByName();
+void searchBinaryByProduct();
 
 /**
  * @brief Поиск клиентов по товару и дате.

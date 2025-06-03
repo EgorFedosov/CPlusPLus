@@ -49,7 +49,7 @@ short checkChoice()
             continue;
         }
 
-        choice = strtol(input, &end, 10);
+        choice = strtol(input, &end, 10); // получаем целое число
 
         if (end == input || *end != '\0')
         {
@@ -64,7 +64,7 @@ short checkChoice()
 
     } while (!valid);
 
-    return static_cast<short>(choice);
+    return static_cast<short>(choice); // long to short
 }
 
 template <typename T>

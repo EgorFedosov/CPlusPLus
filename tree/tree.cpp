@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string>
+#include <cstring>
 #include <stack>
 
 using namespace std;
@@ -7,17 +7,28 @@ using namespace std;
 struct TreeNode
 {
     int data;
+    char info[100];
     TreeNode *left;
     TreeNode *right;
 };
 
-TreeNode *createNode(int value)
+TreeNode *createNode(int value, const char *info)
 {
-    return new TreeNode{value, nullptr, nullptr};
+    TreeNode *node = new TreeNode;
+    node->data = value;
+    strncpy(node->info, info, 99);
+    node->info[99] = '\0';
+    node->left = node->right = nullptr;
+    return node;
 }
-
-void add(TreeNode *&root, int value)
+void add(TreeNode *&root, int value, const char *info)
 {
+    if (info == nullptr || strlen(info) == 0 || strlen(info) >= 100)
+    {
+        cout << "Error: Invalid info for key " << value << endl;
+        return;
+    }
+
     TreeNode *current = root;
     TreeNode *prev = nullptr;
     bool find = false;
@@ -43,7 +54,7 @@ void add(TreeNode *&root, int value)
     if (find)
         return;
 
-    TreeNode *newNode = createNode(value);
+    TreeNode *newNode = createNode(value, info);
     if (!prev)
     {
         root = newNode;
@@ -76,7 +87,7 @@ void View_Tree(const TreeNode *p, int level = 0)
 
 TreeNode *Del_Info(TreeNode *root, int key)
 {
-    TreeNode *Del = root, *Prev_Del = nullptr, *R = nullptr, *Prev_R = nullptr; //  R - на что заменяем
+    TreeNode *Del = root, *Prev_Del = nullptr, *R = nullptr, *Prev_R = nullptr;
 
     while (Del && Del->data != key)
     {
@@ -145,7 +156,8 @@ void TreeFromArray(TreeNode *&root, const int arr[], int size)
 {
     for (int i = 0; i < size; ++i)
     {
-        add(root, arr[i]);
+        char info[100] = "def";
+        add(root, arr[i], info);
     }
 }
 
@@ -169,12 +181,11 @@ int Search_Info(TreeNode *root, int key)
     }
     else
     {
-        cout << "Find key!";
+        cout << "Find key: " << Find->data << ", info: " << Find->info << endl;
         return Find->data;
     }
 }
 
-// прямой обход
 void DirectPrint(TreeNode *root)
 {
     if (root == NULL)
@@ -186,7 +197,6 @@ void DirectPrint(TreeNode *root)
 
     while (s.empty() == false)
     {
-
         TreeNode *temp = s.top();
         s.pop();
         cout << temp->data << " ";
@@ -255,7 +265,9 @@ TreeNode *buildBalancedTree(int *arr, int start, int end)
         return nullptr;
 
     int mid = (start + end) / 2;
-    TreeNode *node = createNode(arr[mid]);
+    char info[100];
+    snprintf(info, sizeof(info), "info%d", arr[mid]);
+    TreeNode *node = createNode(arr[mid], info);
 
     node->left = buildBalancedTree(arr, start, mid - 1);
     node->right = buildBalancedTree(arr, mid + 1, end);
@@ -273,11 +285,36 @@ void balanceTree(TreeNode *&root)
     int index = 0;
 
     fillArray(root, arr, index);
-    Del_Tree(root); // очищаем старое дерево
+    Del_Tree(root);
 
     root = buildBalancedTree(arr, 0, n - 1);
 
     delete[] arr;
+}
+
+void sumAndCount(TreeNode *root, int &sum, int &count)
+{
+    if (!root)
+        return;
+    sum += root->data;
+    count++;
+    sumAndCount(root->left, sum, count);
+    sumAndCount(root->right, sum, count);
+}
+
+void find(TreeNode *root, double average, TreeNode *&temp)
+{
+    if (!root)
+        return;
+
+    if (!temp || abs(root->data - average) < abs(temp->data - average))
+        temp = root;
+
+    if (average < root->data)
+        find(root->left, average, temp);
+
+    else if (average > root->data)
+        find(root->right, average, temp);
 }
 
 int main()
@@ -298,6 +335,7 @@ int main()
         cout << "9. Balance the tree\n";
         cout << "10. Delete the  tree\n";
         cout << "11. Create tree from array\n";
+        cout << "12. Find average key and temp info\n";
         cout << "0. Exit\n";
         cout << "Enter choice: ";
         cin >> choice;
@@ -307,9 +345,13 @@ int main()
         case 1:
         {
             int val;
+            char info[100];
             cout << "Enter value to add: ";
             cin >> val;
-            add(root, val);
+            cout << "Enter info for the node: ";
+            cin.ignore();
+            cin.getline(info, 100);
+            add(root, val, info);
             break;
         }
         case 2:
@@ -404,6 +446,27 @@ int main()
             cout << "Tree created from array." << endl;
             break;
         }
+
+        case 12:
+        {
+            int sum = 0, count = 0;
+            sumAndCount(root, sum, count);
+
+            if (count == 0)
+            {
+                cout << "Tree is empty.\n";
+                break;
+            }
+
+            double average = sum / count;
+            TreeNode *temp = nullptr;
+            find(root, average, temp);
+
+            cout << "Average key value: " << average << endl;
+            cout << "temp key: " << temp->data << ", Info: " << temp->info << endl;
+            break;
+        }
+
         case 0:
         {
             cout << "Exiting..." << endl;
