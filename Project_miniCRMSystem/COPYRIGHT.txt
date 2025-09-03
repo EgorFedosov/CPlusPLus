@@ -1,9 +1,0 @@
-Copyright (c) 2025 [Egor Fedosov]. All rights reserved.
-
-This project is an educational work and is not intended for commercial use.
-Distribution and modification are allowed only with the indication of authorship.
-
-Copyright (c) 2024 [Егор Федосов]. Все права защищены.
-
-Этот проект является учебной работой и не предназначен для коммерческого использования.
-Распространение и модификация разрешены только с указанием авторства.
